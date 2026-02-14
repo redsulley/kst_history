@@ -408,7 +408,7 @@ body {
 .timeline_box .controls {
 	position: absolute;
 	top: 220px;
-	left: 30px;
+	left: 25px;
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
