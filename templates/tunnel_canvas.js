@@ -13,12 +13,12 @@ const SEGMENT_SIZE = 15;      // 線條細膩度
 const BASE_ROTATION = Math.PI * 2; // 一個週期轉一圈 (確保無縫)
 
 // --- 線條粗細度設定 ---
-const SPOKE_LINE_WIDTH = 4.0; // 放射線的粗細度
-const RING_LINE_WIDTH = 3.0;  // 圓環線的粗細度
+const SPOKE_LINE_WIDTH = 5.0; // 放射線的粗細度
+const RING_LINE_WIDTH = 4.0;  // 圓環線的粗細度
 
 // --- 線條透明度設定 (分開自訂) ---
-const SPOKE_OPACITY = 0.25;   // 放射線的透明度 (0.0 ~ 1.0)
-const RING_OPACITY = 0.6;    // 圓環線的最大透明度 (0.0 ~ 1.0)
+const SPOKE_OPACITY = 1.0;   // 放射線的透明度 (0.0 ~ 1.0)
+const RING_OPACITY = 1.0;    // 圓環線的最大透明度 (0.0 ~ 1.0)
 
 let progress = 0;
 
