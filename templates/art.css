@@ -264,14 +264,15 @@ body {
 	width: var(--ring-size);
 	height: var(--ring-size);
 	/* 調整水平位置 */
-	left: calc(var(--ring-size) / -2 - 20px);
+	left: calc(var(--ring-size) / -2 - 120px);
+	/* 調整垂直位置 */
+	top: -230px;
 	border: 1px solid rgba(0, 0, 0, 0.05);
 	border-radius: 50%;
 	transition: transform var(--transition-speed) var(--transition-timing);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	top: -280px;
 }
 
 .timeline_box .timeline-top {
