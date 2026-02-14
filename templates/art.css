@@ -216,7 +216,7 @@ body {
 .timeline_box {
 	--transition-speed: 0.5s;
 	--transition-timing: ease-in-out;
-	--ring-size: 1100px;
+	--ring-size: 1000px;
 	position: relative;
 }
 
@@ -263,7 +263,8 @@ body {
 	position: absolute;
 	width: var(--ring-size);
 	height: var(--ring-size);
-	left: calc(var(--ring-size) / -2 - 70px);
+	/* 調整水平位置 */
+	left: calc(var(--ring-size) / -2 - 20px);
 	border: 1px solid rgba(0, 0, 0, 0.05);
 	border-radius: 50%;
 	transition: transform var(--transition-speed) var(--transition-timing);
