@@ -13,7 +13,7 @@ const SEGMENT_SIZE = 15;      // 線條細膩度
 const BASE_ROTATION = Math.PI * 2; // 一個週期轉一圈 (確保無縫)
 
 // --- 線條粗細度設定 (分開設定) ---
-const SPOKE_LINE_WIDTH = 1.2; // 放射線的粗細度
+const SPOKE_LINE_WIDTH = 3.0; // 放射線的粗細度
 const RING_LINE_WIDTH = 2.5;  // 圓環線的粗細度
 
 let progress = 0;
