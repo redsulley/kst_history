@@ -4,6 +4,36 @@ $(document).ready(function () {
 });
 
 
+/* 背景色控制 開始 */
+$(document).ready(function () {
+    init_bg_work();
+    if ($("body.page_home").length) {
+        //首頁
+        set_color('#ffafcc', '#ffc8dd', '#a2d2ff', '#bde0fe');
+    } else {
+        //史前時代
+        if ($("body.epoch_1").length) {
+            set_color('#d5bdaf', '#e3d5ca', '#d6ccc2', '#f5ebe0');
+        }
+        //大航海時代
+        if ($("body.epoch_2").length) {
+            set_color('#48cae4', '#90e0ef', '#ade8f4', '#caf0f8');
+        }
+        //清帝國時代
+        if ($("body.epoch_3").length) {
+            set_color('#ffac81', '#fec3a6', '#cdeac0', '#efe9ae');
+        }
+        //日治時代
+        if ($("body.epoch_4").length) {
+            set_color('#ccd5ae', '#e9edc9', '#faedcd', '#fefae0');
+        }
+        //中華民國
+        if ($("body.epoch_5").length) {
+            set_color('#ff8fab', '#ffb3c6', '#ffc2d1', '#ffe5ec');
+        }
+    }
+});
+/* 背景色控制 結束 */
 
 
 /* 主選單 開始 */
