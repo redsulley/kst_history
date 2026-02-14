@@ -26,7 +26,7 @@ let progress = 0;
 function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-    centerX = width * 0.35;
+    centerX = width * 0.25;
     centerY = height * 0.35;
 }
 
