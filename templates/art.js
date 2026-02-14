@@ -14,15 +14,19 @@ function menu_switch() {
 
 
 /* 時間軸設計 開始 */
-let currentIndex = 0;
-const total = timelineData.length;
-const angleStep = 30;
+let currentIndex = null;
+const total = null;
+const angleStep = null;
 
 function init_timelineRing(arg_data) {
+	currentIndex = 0;
+	total = arg_data.length;
+	angleStep = 30;
+
 	const $ring = $('#timelineRing');
 	$ring.empty();
 
-	timelineData.forEach((item, i) => {
+	arg_data.forEach((item, i) => {
 		const nodeBaseAngle = i * angleStep;
 		const $node = $(`
                     <div class="timeline-node" data-index="${i}" 
@@ -62,7 +66,7 @@ function init_timelineRing(arg_data) {
 		}
 	});
 
-	
+
 }
 
 function updateUI(arg_data) {
