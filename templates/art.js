@@ -13,24 +13,27 @@ $(document).ready(function () {
     } else {
         //史前時代
         if ($("body.epoch_1").length) {
-            set_color('#d5bdaf', '#e3d5ca', '#d6ccc2', '#f5ebe0');
+            set_color('#fff3c7', '#efac00', '#abfbff', '#f5ffcfabebe0');
         }
         //大航海時代
         if ($("body.epoch_2").length) {
-            set_color('#48cae4', '#90e0ef', '#ade8f4', '#caf0f8');
+            set_color('#3a9eff', '#a4f4ff', '#beabff', '#f9c2ff');
         }
         //清帝國時代
         if ($("body.epoch_3").length) {
-            set_color('#ffac81', '#fec3a6', '#cdeac0', '#efe9ae');
+            set_color('#4e5dff', '#ffeb6f', '#ffcf71', '#ffeed1');
         }
+
         //日治時代
         if ($("body.epoch_4").length) {
-            set_color('#ccd5ae', '#e9edc9', '#faedcd', '#fefae0');
+            set_color('#ffb1a1', '#ffeee5', '#d6fff6', '#ff5a63');
         }
+
         //中華民國
         if ($("body.epoch_5").length) {
-            set_color('#ff8fab', '#ffb3c6', '#ffc2d1', '#ffe5ec');
+            set_color('#bae7ff', '#a1ffe2', '#ffd4ea', '#fff332');
         }
+
     }
 });
 /* 背景色控制 結束 */
