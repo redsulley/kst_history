@@ -9,7 +9,7 @@ const SPOKE_COUNT = 16;
 // 圓環數量
 const RING_COUNT = 12;
 // 移動與旋轉速度
-const SPEED = 0.005;
+const SPEED = 0.001;
 // 手繪抖動強度
 const WOBBLE_STRENGTH = 6;
 // 線條細膩度
