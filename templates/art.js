@@ -54,7 +54,7 @@ let angleStep = null;
 function init_timelineRing(arg_data) {
 	currentIndex = 0;
 	total = arg_data.length;
-	angleStep = 30;
+	angleStep = 40;
 
 	const $ring = $('#timelineRing');
 	$ring.empty();
