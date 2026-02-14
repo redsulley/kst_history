@@ -4,9 +4,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 @import url('font-awesome.min.css');
 
-html {
-	/*scroll-behavior: smooth;*/
-}
 
 ::selection {
 	background: #ff8e09;
@@ -365,6 +362,7 @@ body {
 	transition: transform var(--transition-speed) var(--transition-timing), color 0.4s;
 	transform-origin: left center;
 	background: #fff;
+	border-radius: 10px;
 	padding: 20px 20px;
 	width: 100%;
 }
@@ -387,7 +385,7 @@ body {
 	/* 確保在文字下方 */
 
 	/* 增加一點不對稱圓角，手繪感更強 */
-	border-radius: 2px 4px 3px 6px / 6px 3px 5px 2px;
+	border-radius: 10px;
 }
 
 .timeline_box .node-title span {
