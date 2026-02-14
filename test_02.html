@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>手繪感無縫隧道背景 - 獨立線寬版</title>
     <style>
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             width: 100%;
@@ -38,48 +40,38 @@
         canvas {
             display: block;
         }
-
-        .content {
-            position: absolute;
-            bottom: 10%;
-            right: 10%;
-            color: #fff;
-            font-family: 'Segoe UI', sans-serif;
-            text-align: right;
-            pointer-events: none;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            opacity: 0.8;
-        }
     </style>
 </head>
+
 <body>
 
     <div class="background-container"></div>
     <div class="background-overlay"></div>
     <canvas id="tunnelCanvas"></canvas>
 
-    <div class="content">
-        <p style="font-size: 2rem; font-weight: bold; margin: 0;">Adjustable Line Weight</p>
-        <p style="margin: 0;">Seamless Hand-Drawn Loop</p>
-    </div>
-
     <script>
         const canvas = document.getElementById('tunnelCanvas');
         const ctx = canvas.getContext('2d');
 
         let width, height, centerX, centerY;
-        
-        // --- 核心設定 ---
-        const SPOKE_COUNT = 16;       // 放射線數量
-        const RING_COUNT = 12;        // 圓環數量
-        const SPEED = 0.0012;         // 移動與旋轉速度
-        const WOBBLE_STRENGTH = 6;    // 手繪抖動強度
-        const SEGMENT_SIZE = 15;      // 線條細膩度
-        const BASE_ROTATION = Math.PI * 2; // 一個週期轉一圈 (確保無縫)
 
-        // --- 線條粗細度設定 (分開設定) ---
-        const SPOKE_LINE_WIDTH = 10.2; // 放射線的粗細度
-        const RING_LINE_WIDTH = 2.5;  // 圓環線的粗細度
+        // --- 核心設定 ---
+        // 放射線數量
+        const SPOKE_COUNT = 16;
+        // 圓環數量
+        const RING_COUNT = 12;
+        // 移動與旋轉速度
+        const SPEED = 0.0012;
+        // 手繪抖動強度
+        const WOBBLE_STRENGTH = 6;
+        // 線條細膩度
+        const SEGMENT_SIZE = 15;
+        // 一個週期轉一圈 (確保無縫)
+        const BASE_ROTATION = Math.PI * 2;
+        // 放射線的粗細度
+        const SPOKE_LINE_WIDTH = 10.2;
+        // 圓環線的粗細度
+        const RING_LINE_WIDTH = 2.5;
 
         let progress = 0;
 
@@ -100,7 +92,7 @@
             const angle = (index / SPOKE_COUNT) * Math.PI * 2 + progress * BASE_ROTATION;
             const maxDist = Math.max(width, height) * 1.5;
             const segments = Math.floor(maxDist / SEGMENT_SIZE);
-            
+
             ctx.beginPath();
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
             ctx.moveTo(centerX, centerY);
@@ -127,11 +119,11 @@
          */
         function drawHandDrawnRing(radius, seed, alpha, rotationOffset) {
             if (radius < 5 || alpha <= 0) return;
-            
+
             const segments = 100;
             ctx.beginPath();
             ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
-            
+
             const eccX = 1 + Math.sin(seed) * 0.03;
             const eccY = 1 + Math.cos(seed) * 0.03;
 
@@ -140,21 +132,21 @@
                 const angle = t * Math.PI * 2 + rotationOffset;
                 const wobble = Math.sin(t * Math.PI * 10 + seed + progress * Math.PI * 6) * WOBBLE_STRENGTH;
                 const currentR = radius + wobble;
-                
+
                 const x = centerX + Math.cos(angle) * currentR * eccX;
                 const y = centerY + Math.sin(angle) * currentR * eccY;
 
                 if (i === 0) ctx.moveTo(x, y);
                 else ctx.lineTo(x, y);
             }
-            
+
             ctx.closePath();
             ctx.stroke();
         }
 
         function animate() {
             ctx.clearRect(0, 0, width, height);
-            
+
             progress += SPEED;
             if (progress >= 1) progress = 0;
 
@@ -176,7 +168,7 @@
                 const radius = Math.pow(ringProgress, 2.5) * maxDist;
                 const alpha = Math.sin(ringProgress * Math.PI) * 0.6;
                 const ringRotation = progress * BASE_ROTATION;
-                
+
                 drawHandDrawnRing(radius, i * 123.7, alpha, ringRotation);
             }
 
@@ -185,7 +177,7 @@
             const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowSize);
             gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
             gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-            
+
             ctx.fillStyle = gradient;
             ctx.beginPath();
             ctx.arc(centerX, centerY, glowSize, 0, Math.PI * 2);
@@ -197,4 +189,5 @@
         animate();
     </script>
 </body>
+
 </html>
