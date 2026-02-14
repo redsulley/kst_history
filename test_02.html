@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>手繪感無縫隧道背景 - 自由直線版</title>
+    <title>手繪感無縫隧道背景 - 獨立線寬版</title>
     <style>
         body, html {
             margin: 0;
@@ -59,7 +59,7 @@
     <canvas id="tunnelCanvas"></canvas>
 
     <div class="content">
-        <p style="font-size: 2rem; font-weight: bold; margin: 0;">Straight Free Lines</p>
+        <p style="font-size: 2rem; font-weight: bold; margin: 0;">Adjustable Line Weight</p>
         <p style="margin: 0;">Seamless Hand-Drawn Loop</p>
     </div>
 
@@ -73,10 +73,13 @@
         const SPOKE_COUNT = 16;       // 放射線數量
         const RING_COUNT = 12;        // 圓環數量
         const SPEED = 0.0012;         // 移動與旋轉速度
-        const WOBBLE_STRENGTH = 6;    // 手繪抖動強度 (增加一點自由感)
+        const WOBBLE_STRENGTH = 6;    // 手繪抖動強度
         const SEGMENT_SIZE = 15;      // 線條細膩度
-        const CONSTANT_LINE_WIDTH = 1.8; // 統一線條粗細
         const BASE_ROTATION = Math.PI * 2; // 一個週期轉一圈 (確保無縫)
+
+        // --- 線條粗細度設定 (分開設定) ---
+        const SPOKE_LINE_WIDTH = 10.2; // 放射線的粗細度
+        const RING_LINE_WIDTH = 2.5;  // 圓環線的粗細度
 
         let progress = 0;
 
@@ -91,10 +94,9 @@
         resize();
 
         /**
-         * 繪製自由手繪放射線 (Spokes) - 移除螺旋感，保持直線放射
+         * 繪製自由手繪放射線 (Spokes)
          */
         function drawHandDrawnSpoke(index, seed) {
-            // 基礎角度：隨時間旋轉，但線條本身不隨距離扭曲
             const angle = (index / SPOKE_COUNT) * Math.PI * 2 + progress * BASE_ROTATION;
             const maxDist = Math.max(width, height) * 1.5;
             const segments = Math.floor(maxDist / SEGMENT_SIZE);
@@ -103,22 +105,16 @@
             ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
             ctx.moveTo(centerX, centerY);
 
-            // 方向向量
             const dirX = Math.cos(angle);
             const dirY = Math.sin(angle);
-            // 法向量 (用於抖動偏移)
             const normX = -dirY;
             const normY = dirX;
 
             for (let i = 1; i <= segments; i++) {
                 const t = i / segments;
                 const dist = t * maxDist;
-                
-                // 基礎直線路徑
                 const bx = centerX + dirX * dist;
                 const by = centerY + dirY * dist;
-
-                // 沿線的手繪抖動 (無縫公式：progress * PI * 2 * n)
                 const wobble = Math.sin(t * 6 * Math.PI + seed + progress * Math.PI * 4) * WOBBLE_STRENGTH;
 
                 ctx.lineTo(bx + normX * wobble, by + normY * wobble);
@@ -136,17 +132,13 @@
             ctx.beginPath();
             ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
             
-            // 模擬手繪的不規則橢圓度
             const eccX = 1 + Math.sin(seed) * 0.03;
             const eccY = 1 + Math.cos(seed) * 0.03;
 
             for (let i = 0; i <= segments; i++) {
                 const t = i / segments;
                 const angle = t * Math.PI * 2 + rotationOffset;
-                
-                // 圓環抖動 (頭尾相接無縫)
                 const wobble = Math.sin(t * Math.PI * 10 + seed + progress * Math.PI * 6) * WOBBLE_STRENGTH;
-                
                 const currentR = radius + wobble;
                 
                 const x = centerX + Math.cos(angle) * currentR * eccX;
@@ -168,24 +160,21 @@
 
             const maxDist = Math.max(width, height) * 1.5;
 
-            ctx.lineWidth = CONSTANT_LINE_WIDTH;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
 
-            // 1. 繪製放射線 (Spokes)
+            // 1. 繪製放射線 (使用專屬粗細度)
+            ctx.lineWidth = SPOKE_LINE_WIDTH;
             for (let i = 0; i < SPOKE_COUNT; i++) {
                 drawHandDrawnSpoke(i, i * 42.1);
             }
 
-            // 2. 繪製圓環 (Rings)
+            // 2. 繪製圓環 (使用專屬粗細度)
+            ctx.lineWidth = RING_LINE_WIDTH;
             for (let i = 0; i < RING_COUNT; i++) {
                 let ringProgress = (i / RING_COUNT + progress) % 1;
-                
-                // 隧道透視縮放
                 const radius = Math.pow(ringProgress, 2.5) * maxDist;
                 const alpha = Math.sin(ringProgress * Math.PI) * 0.6;
-                
-                // 圓環跟隨旋轉
                 const ringRotation = progress * BASE_ROTATION;
                 
                 drawHandDrawnRing(radius, i * 123.7, alpha, ringRotation);
