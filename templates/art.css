@@ -264,7 +264,7 @@ body {
 	width: var(--ring-size);
 	height: var(--ring-size);
 	/* 調整水平位置 */
-	left: calc(var(--ring-size) / -2 - 20px);
+	left: calc(var(--ring-size) / -2 - 30px);
 	/* 調整垂直位置 */
 	top: -230px;
 	border: 1px solid rgba(0, 0, 0, 0.05);
@@ -408,7 +408,7 @@ body {
 .timeline_box .controls {
 	position: absolute;
 	top: 220px;
-	left: 25px;
+	left: 20px;
 	display: flex;
 	flex-direction: column;
 	gap: 15px;
