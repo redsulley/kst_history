@@ -15,8 +15,8 @@ function menu_switch() {
 
 /* 時間軸設計 開始 */
 let currentIndex = null;
-const total = null;
-const angleStep = null;
+let total = null;
+let angleStep = null;
 
 function init_timelineRing(arg_data) {
 	currentIndex = 0;
