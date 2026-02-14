@@ -12,9 +12,13 @@ const WOBBLE_STRENGTH = 10;    // 手繪抖動強度
 const SEGMENT_SIZE = 15;      // 線條細膩度
 const BASE_ROTATION = Math.PI * 2; // 一個週期轉一圈 (確保無縫)
 
-// --- 線條粗細度設定 (分開設定) ---
-const SPOKE_LINE_WIDTH = 3.5; // 放射線的粗細度
-const RING_LINE_WIDTH = 2.5;  // 圓環線的粗細度
+// --- 線條粗細度設定 ---
+const SPOKE_LINE_WIDTH = 4.0; // 放射線的粗細度
+const RING_LINE_WIDTH = 3.0;  // 圓環線的粗細度
+
+// --- 線條透明度設定 (分開自訂) ---
+const SPOKE_OPACITY = 0.25;   // 放射線的透明度 (0.0 ~ 1.0)
+const RING_OPACITY = 0.6;    // 圓環線的最大透明度 (0.0 ~ 1.0)
 
 let progress = 0;
 
@@ -37,7 +41,8 @@ function drawHandDrawnSpoke(index, seed) {
     const segments = Math.floor(maxDist / SEGMENT_SIZE);
 
     ctx.beginPath();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+    // 使用自訂的放射線透明度
+    ctx.strokeStyle = `rgba(255, 255, 255, ${SPOKE_OPACITY})`;
     ctx.moveTo(centerX, centerY);
 
     const dirX = Math.cos(angle);
@@ -65,7 +70,8 @@ function drawHandDrawnRing(radius, seed, alpha, rotationOffset) {
 
     const segments = 100;
     ctx.beginPath();
-    ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+    // alpha 由動畫邏輯計算，再乘以自訂的最大透明度
+    ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * RING_OPACITY})`;
 
     const eccX = 1 + Math.sin(seed) * 0.03;
     const eccY = 1 + Math.cos(seed) * 0.03;
@@ -98,18 +104,19 @@ function animate() {
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
-    // 1. 繪製放射線 (使用專屬粗細度)
+    // 1. 繪製放射線
     ctx.lineWidth = SPOKE_LINE_WIDTH;
     for (let i = 0; i < SPOKE_COUNT; i++) {
         drawHandDrawnSpoke(i, i * 42.1);
     }
 
-    // 2. 繪製圓環 (使用專屬粗細度)
+    // 2. 繪製圓環
     ctx.lineWidth = RING_LINE_WIDTH;
     for (let i = 0; i < RING_COUNT; i++) {
         let ringProgress = (i / RING_COUNT + progress) % 1;
         const radius = Math.pow(ringProgress, 2.5) * maxDist;
-        const alpha = Math.sin(ringProgress * Math.PI) * 0.6;
+        // 這裡的 alpha 負責處理進場與出場的淡入淡出邏輯
+        const alpha = Math.sin(ringProgress * Math.PI);
         const ringRotation = progress * BASE_ROTATION;
 
         drawHandDrawnRing(radius, i * 123.7, alpha, ringRotation);
