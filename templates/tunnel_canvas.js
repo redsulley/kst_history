@@ -4,30 +4,40 @@ const ctx = canvas.getContext('2d');
 let width, height, centerX, centerY;
 
 // --- 核心設定 ---
-// 放射線數量
-const SPOKE_COUNT = 16;
-// 圓環數量
-const RING_COUNT = 12;
-// 移動與旋轉速度
-const SPEED = 0.0005;
-// 手繪抖動強度
-const WOBBLE_STRENGTH = 6;
-// 線條細膩度
-const SEGMENT_SIZE = 15;
-// 一個週期轉一圈 (確保無縫)
-const BASE_ROTATION = Math.PI * 2;
-// 放射線的粗細度
-const SPOKE_LINE_WIDTH = 4;
-// 圓環線的粗細度
-const RING_LINE_WIDTH = 2;
+const SPOKE_COUNT = 16;       // 放射線數量
+const RING_COUNT = 12;        // 圓環數量
+const SPEED = 0.0006;         // 移動與旋轉基礎速度
+const WOBBLE_STRENGTH = 6;    // 手繪抖動強度
+const SEGMENT_SIZE = 15;      // 線條細膩度
+const BASE_ROTATION = Math.PI * 2; // 一個週期轉一圈 (確保無縫)
+
+// --- 線條與星星設定 (可自訂) ---
+const SPOKE_LINE_WIDTH = 1.0; // 放射線的粗細度
+const RING_LINE_WIDTH = 2.2;  // 圓環線的粗細度
+const STAR_COUNT = 80;        // 星星數量 (可自訂設定)
+const STAR_BASE_SIZE = 2.5;   // 星星基礎大小
 
 let progress = 0;
+let stars = [];
+
+function initStars() {
+    stars = [];
+    for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+            angleOffset: Math.random() * Math.PI * 2, // 隨機放射角度
+            distanceOffset: Math.random(),            // 初始距離偏移
+            speedMult: 0.5 + Math.random() * 0.5,    // 個別星速差異
+            size: 0.5 + Math.random() * 1.5           // 個別大小差異
+        });
+    }
+}
 
 function resize() {
     width = canvas.width = window.innerWidth;
     height = canvas.height = window.innerHeight;
-    centerX = width * 0.25;
+    centerX = width * 0.35;
     centerY = height * 0.35;
+    initStars(); // 縮放時重新生成星星位置
 }
 
 window.addEventListener('resize', resize);
@@ -42,7 +52,7 @@ function drawHandDrawnSpoke(index, seed) {
     const segments = Math.floor(maxDist / SEGMENT_SIZE);
 
     ctx.beginPath();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
     ctx.moveTo(centerX, centerY);
 
     const dirX = Math.cos(angle);
@@ -92,6 +102,36 @@ function drawHandDrawnRing(radius, seed, alpha, rotationOffset) {
     ctx.stroke();
 }
 
+/**
+ * 繪製星星 (Particles)
+ */
+function drawStars() {
+    const maxDist = Math.max(width, height) * 1.2;
+
+    stars.forEach((star) => {
+        // 計算每顆星星的獨立進度 (0 -> 1)
+        let starProgress = (star.distanceOffset + progress * 1.5) % 1;
+
+        // 模擬隧道透視的擴散距離
+        const dist = Math.pow(starProgress, 2) * maxDist;
+
+        // 跟隨整體旋轉
+        const angle = star.angleOffset + progress * BASE_ROTATION;
+
+        const x = centerX + Math.cos(angle) * dist;
+        const y = centerY + Math.sin(angle) * dist;
+
+        // 越靠近邊緣越亮且越大
+        const alpha = Math.sin(starProgress * Math.PI) * 0.8;
+        const size = star.size * (0.5 + starProgress * 2);
+
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.beginPath();
+        ctx.arc(x, y, size, 0, Math.PI * 2);
+        ctx.fill();
+    });
+}
+
 function animate() {
     ctx.clearRect(0, 0, width, height);
 
@@ -103,24 +143,27 @@ function animate() {
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
 
-    // 1. 繪製放射線 (使用專屬粗細度)
+    // 1. 繪製星星 (最底層)
+    drawStars();
+
+    // 2. 繪製放射線
     ctx.lineWidth = SPOKE_LINE_WIDTH;
     for (let i = 0; i < SPOKE_COUNT; i++) {
         drawHandDrawnSpoke(i, i * 42.1);
     }
 
-    // 2. 繪製圓環 (使用專屬粗細度)
+    // 3. 繪製圓環
     ctx.lineWidth = RING_LINE_WIDTH;
     for (let i = 0; i < RING_COUNT; i++) {
         let ringProgress = (i / RING_COUNT + progress) % 1;
         const radius = Math.pow(ringProgress, 2.5) * maxDist;
-        const alpha = Math.sin(ringProgress * Math.PI) * 0.6;
+        const alpha = Math.sin(ringProgress * Math.PI) * 0.5;
         const ringRotation = progress * BASE_ROTATION;
 
         drawHandDrawnRing(radius, i * 123.7, alpha, ringRotation);
     }
 
-    // 3. 中心光點
+    // 4. 中心光源
     const glowSize = 35 + Math.sin(progress * Math.PI * 2) * 5;
     const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowSize);
     gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
