@@ -16,26 +16,6 @@
             background: #cfbfdf;
         }
 
-        /* 漸層背景 - 模擬影片柔和色調 */
-        .background-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 40%, #eec9ed 70%, #f7bb97 100%);
-            z-index: -2;
-        }
-
-        .background-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.6) 0%, transparent 75%);
-            z-index: -1;
-        }
 
         canvas {
             display: block;
@@ -45,8 +25,6 @@
 
 <body>
 
-    <div class="background-container"></div>
-    <div class="background-overlay"></div>
     <canvas id="tunnelCanvas"></canvas>
 
     <script>
