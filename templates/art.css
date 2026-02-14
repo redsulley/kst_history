@@ -264,7 +264,7 @@ body {
 	width: var(--ring-size);
 	height: var(--ring-size);
 	/* 調整水平位置 */
-	left: calc(var(--ring-size) / -2 - 120px);
+	left: calc(var(--ring-size) / -2 - 20px);
 	/* 調整垂直位置 */
 	top: -230px;
 	border: 1px solid rgba(0, 0, 0, 0.05);
@@ -281,7 +281,7 @@ body {
 	left: 0;
 	right: 0;
 	margin: 10px;
-	padding: 5px 10px;
+	padding: 10px 20px;
 	background: #fff;
 	display: flex;
 }
@@ -368,6 +368,9 @@ body {
 	border-radius: 10px;
 	padding: 20px 20px;
 	width: 100%;
+	/* 事件寬度 */
+	margin-right: 90px;
+
 }
 
 /* 這是真正承載「手繪邊框」的層 */
