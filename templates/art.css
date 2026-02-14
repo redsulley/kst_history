@@ -366,9 +366,9 @@ body {
 	transform-origin: left center;
 	background: #fff;
 	border-radius: 10px;
-	padding: 20px 20px;
+	padding: 15px;
 	width: 100%;
-	/* 事件寬度 */
+	/* 項目寬度 */
 	margin-right: 90px;
 
 }
