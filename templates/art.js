@@ -18,7 +18,7 @@ let currentIndex = 0;
 const total = timelineData.length;
 const angleStep = 30;
 
-function init_timelineRing() {
+function init_timelineRing(arg_data) {
 	const $ring = $('#timelineRing');
 	$ring.empty();
 
@@ -37,18 +37,36 @@ function init_timelineRing() {
 		/*
 		$node.on('click', () => {
 			currentIndex = i;
-			updateUI();
+			updateUI(arg_data);
 		});
 		*/
 
 		$ring.append($node);
 	});
 
-	updateUI();
+	updateUI(arg_data);
+
+	$('.timeline_box #prevBtn').on('click', function (e) {
+		e.preventDefault();
+		if (currentIndex > 0) {
+			currentIndex--;
+			updateUI(arg_data);
+		}
+	});
+
+	$('.timeline_box #nextBtn').on('click', function (e) {
+		e.preventDefault();
+		if (currentIndex < total - 1) {
+			currentIndex++;
+			updateUI(arg_data);
+		}
+	});
+
+	
 }
 
-function updateUI() {
-	const data = timelineData[currentIndex];
+function updateUI(arg_data) {
+	const data = arg_data[currentIndex];
 	const targetRingRotation = -currentIndex * angleStep;
 
 	// 顯示當前項目筆數
@@ -82,26 +100,8 @@ function updateUI() {
 	// 按鈕狀態更新
 	$('.timeline_box #prevBtn').prop('disabled', currentIndex === 0);
 	$('.timeline_box #nextBtn').prop('disabled', currentIndex === total - 1);
+
 }
 
-$(document).ready(function () {
-	init_timelineRing();
-
-	$('.timeline_box #prevBtn').on('click', function (e) {
-		e.preventDefault();
-		if (currentIndex > 0) {
-			currentIndex--;
-			updateUI();
-		}
-	});
-
-	$('.timeline_box #nextBtn').on('click', function (e) {
-		e.preventDefault();
-		if (currentIndex < total - 1) {
-			currentIndex++;
-			updateUI();
-		}
-	});
-});
 
 /* 時間軸設計 結束 */
