@@ -54,6 +54,7 @@ let angleStep = null;
 function init_timelineRing(arg_data) {
 	currentIndex = 0;
 	total = arg_data.length;
+	/* 數值越大，上下項目之間越鬆散 */
 	angleStep = 40;
 
 	const $ring = $('#timelineRing');
