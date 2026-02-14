@@ -318,8 +318,8 @@ body {
 .timeline_box .timeline-node {
 	position: absolute;
 	right: 0;
-	/*  */
-	width: 300px;
+	/* 不可修改 */
+	width: 400px;
 	height: 40px;
 	display: flex;
 	align-items: center;
