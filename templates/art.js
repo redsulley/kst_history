@@ -13,7 +13,7 @@ $(document).ready(function () {
     } else {
         //史前時代
         if ($("body.epoch_1").length) {
-            set_color('#fff3c7', '#efac00', '#abfbff', '#f5ffcfabebe0');
+            set_color('#fff3c7', '#efac00', '#abfbff', '#ffcfab');
         }
         //大航海時代
         if ($("body.epoch_2").length) {
