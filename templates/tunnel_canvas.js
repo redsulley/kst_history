@@ -1,180 +1,188 @@
-const canvas = document.getElementById('tunnelCanvas');
-const ctx = canvas.getContext('2d');
+       const canvas = document.getElementById('tunnelCanvas');
+        const ctx = canvas.getContext('2d');
 
-let width, height, centerX, centerY;
+        let width, height, centerX, centerY;
+        
+        // --- 核心設定 ---
+        const SPOKE_COUNT = 16;       // 放射線數量
+        const RING_COUNT = 12;        // 圓環數量
+        const SPEED = 0.0006;         // 移動與旋轉基礎速度
+        const WOBBLE_STRENGTH = 6;    // 手繪抖動強度
+        const SEGMENT_SIZE = 15;      // 線條細膩度
+        const BASE_ROTATION = Math.PI * 2; // 一個週期轉一圈 (確保無縫)
 
-// --- 核心設定 ---
-const SPOKE_COUNT = 16;       // 放射線數量
-const RING_COUNT = 12;        // 圓環數量
-const SPEED = 0.0006;         // 移動與旋轉基礎速度
-const WOBBLE_STRENGTH = 6;    // 手繪抖動強度
-const SEGMENT_SIZE = 15;      // 線條細膩度
-const BASE_ROTATION = Math.PI * 2; // 一個週期轉一圈 (確保無縫)
+        // --- 線條與星星設定 (可自訂) ---
+        const SPOKE_LINE_WIDTH = 1.0; // 放射線的粗細度
+        const RING_LINE_WIDTH = 2.2;  // 圓環線的粗細度
+        
+        // 星星顏色自訂設定
+        const STAR_COLORS = ["#ffffff", "#0000ff", "#00ff00", "#ff0000", "pink", "yellow"]; 
+        const STAR_COUNT = 120;       // 星星數量
+        const STAR_BASE_SIZE = 2.5;   // 星星基礎大小
 
-// --- 線條與星星設定 (可自訂) ---
-const SPOKE_LINE_WIDTH = 1.0; // 放射線的粗細度
-const RING_LINE_WIDTH = 2.2;  // 圓環線的粗細度
-const STAR_COUNT = 80;        // 星星數量 (可自訂設定)
-const STAR_BASE_SIZE = 2.5;   // 星星基礎大小
+        let progress = 0;
+        let stars = [];
 
-let progress = 0;
-let stars = [];
+        function initStars() {
+            stars = [];
+            for (let i = 0; i < STAR_COUNT; i++) {
+                stars.push({
+                    angleOffset: Math.random() * Math.PI * 2, // 隨機放射角度
+                    distanceOffset: Math.random(),            // 初始距離偏移
+                    speedMult: 0.5 + Math.random() * 0.5,     // 個別星速差異
+                    size: 0.5 + Math.random() * 1.5,          // 個別大小差異
+                    color: STAR_COLORS[i % STAR_COLORS.length] // 依據 array 長度分配顏色
+                });
+            }
+        }
 
-function initStars() {
-    stars = [];
-    for (let i = 0; i < STAR_COUNT; i++) {
-        stars.push({
-            angleOffset: Math.random() * Math.PI * 2, // 隨機放射角度
-            distanceOffset: Math.random(),            // 初始距離偏移
-            speedMult: 0.5 + Math.random() * 0.5,    // 個別星速差異
-            size: 0.5 + Math.random() * 1.5           // 個別大小差異
-        });
-    }
-}
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            centerX = width * 0.35;
+            centerY = height * 0.35;
+            initStars(); // 縮放時重新生成星星位置
+        }
 
-function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-    centerX = width * 0.35;
-    centerY = height * 0.35;
-    initStars(); // 縮放時重新生成星星位置
-}
+        window.addEventListener('resize', resize);
+        resize();
 
-window.addEventListener('resize', resize);
-resize();
+        /**
+         * 繪製自由手繪放射線 (Spokes)
+         */
+        function drawHandDrawnSpoke(index, seed) {
+            const angle = (index / SPOKE_COUNT) * Math.PI * 2 + progress * BASE_ROTATION;
+            const maxDist = Math.max(width, height) * 1.5;
+            const segments = Math.floor(maxDist / SEGMENT_SIZE);
+            
+            ctx.beginPath();
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.moveTo(centerX, centerY);
 
-/**
- * 繪製自由手繪放射線 (Spokes)
- */
-function drawHandDrawnSpoke(index, seed) {
-    const angle = (index / SPOKE_COUNT) * Math.PI * 2 + progress * BASE_ROTATION;
-    const maxDist = Math.max(width, height) * 1.5;
-    const segments = Math.floor(maxDist / SEGMENT_SIZE);
+            const dirX = Math.cos(angle);
+            const dirY = Math.sin(angle);
+            const normX = -dirY;
+            const normY = dirX;
 
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-    ctx.moveTo(centerX, centerY);
+            for (let i = 1; i <= segments; i++) {
+                const t = i / segments;
+                const dist = t * maxDist;
+                const bx = centerX + dirX * dist;
+                const by = centerY + dirY * dist;
+                const wobble = Math.sin(t * 6 * Math.PI + seed + progress * Math.PI * 4) * WOBBLE_STRENGTH;
 
-    const dirX = Math.cos(angle);
-    const dirY = Math.sin(angle);
-    const normX = -dirY;
-    const normY = dirX;
+                ctx.lineTo(bx + normX * wobble, by + normY * wobble);
+            }
+            ctx.stroke();
+        }
 
-    for (let i = 1; i <= segments; i++) {
-        const t = i / segments;
-        const dist = t * maxDist;
-        const bx = centerX + dirX * dist;
-        const by = centerY + dirY * dist;
-        const wobble = Math.sin(t * 6 * Math.PI + seed + progress * Math.PI * 4) * WOBBLE_STRENGTH;
+        /**
+         * 繪製完整的閉合手繪圓環 (Rings)
+         */
+        function drawHandDrawnRing(radius, seed, alpha, rotationOffset) {
+            if (radius < 5 || alpha <= 0) return;
+            
+            const segments = 100;
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+            
+            const eccX = 1 + Math.sin(seed) * 0.03;
+            const eccY = 1 + Math.cos(seed) * 0.03;
 
-        ctx.lineTo(bx + normX * wobble, by + normY * wobble);
-    }
-    ctx.stroke();
-}
+            for (let i = 0; i <= segments; i++) {
+                const t = i / segments;
+                const angle = t * Math.PI * 2 + rotationOffset;
+                const wobble = Math.sin(t * Math.PI * 10 + seed + progress * Math.PI * 6) * WOBBLE_STRENGTH;
+                const currentR = radius + wobble;
+                
+                const x = centerX + Math.cos(angle) * currentR * eccX;
+                const y = centerY + Math.sin(angle) * currentR * eccY;
 
-/**
- * 繪製完整的閉合手繪圓環 (Rings)
- */
-function drawHandDrawnRing(radius, seed, alpha, rotationOffset) {
-    if (radius < 5 || alpha <= 0) return;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            
+            ctx.closePath();
+            ctx.stroke();
+        }
 
-    const segments = 100;
-    ctx.beginPath();
-    ctx.strokeStyle = `rgba(255, 255, 255, ${alpha})`;
+        /**
+         * 繪製星星 (Particles)
+         */
+        function drawStars() {
+            const maxDist = Math.max(width, height) * 1.2;
+            
+            stars.forEach((star) => {
+                // 計算每顆星星的獨立進度 (0 -> 1)
+                let starProgress = (star.distanceOffset + progress * 1.5) % 1;
+                
+                // 模擬隧道透視的擴散距離
+                const dist = Math.pow(starProgress, 2) * maxDist;
+                
+                // 跟隨整體旋轉
+                const angle = star.angleOffset + progress * BASE_ROTATION;
+                
+                const x = centerX + Math.cos(angle) * dist;
+                const y = centerY + Math.sin(angle) * dist;
+                
+                // 越靠近邊緣越亮且越大
+                const alpha = Math.sin(starProgress * Math.PI) * 0.8;
+                const size = star.size * (0.5 + starProgress * 2.5);
+                
+                // 使用自訂顏色並套用透明度
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = star.color;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
 
-    const eccX = 1 + Math.sin(seed) * 0.03;
-    const eccY = 1 + Math.cos(seed) * 0.03;
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            
+            progress += SPEED;
+            if (progress >= 1) progress = 0;
 
-    for (let i = 0; i <= segments; i++) {
-        const t = i / segments;
-        const angle = t * Math.PI * 2 + rotationOffset;
-        const wobble = Math.sin(t * Math.PI * 10 + seed + progress * Math.PI * 6) * WOBBLE_STRENGTH;
-        const currentR = radius + wobble;
+            const maxDist = Math.max(width, height) * 1.5;
 
-        const x = centerX + Math.cos(angle) * currentR * eccX;
-        const y = centerY + Math.sin(angle) * currentR * eccY;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
 
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-    }
+            // 1. 繪製星星 (最底層)
+            drawStars();
 
-    ctx.closePath();
-    ctx.stroke();
-}
+            // 2. 繪製放射線
+            ctx.lineWidth = SPOKE_LINE_WIDTH;
+            for (let i = 0; i < SPOKE_COUNT; i++) {
+                drawHandDrawnSpoke(i, i * 42.1);
+            }
 
-/**
- * 繪製星星 (Particles)
- */
-function drawStars() {
-    const maxDist = Math.max(width, height) * 1.2;
+            // 3. 繪製圓環
+            ctx.lineWidth = RING_LINE_WIDTH;
+            for (let i = 0; i < RING_COUNT; i++) {
+                let ringProgress = (i / RING_COUNT + progress) % 1;
+                const radius = Math.pow(ringProgress, 2.5) * maxDist;
+                const alpha = Math.sin(ringProgress * Math.PI) * 0.5;
+                const ringRotation = progress * BASE_ROTATION;
+                
+                drawHandDrawnRing(radius, i * 123.7, alpha, ringRotation);
+            }
 
-    stars.forEach((star) => {
-        // 計算每顆星星的獨立進度 (0 -> 1)
-        let starProgress = (star.distanceOffset + progress * 1.5) % 1;
+            // 4. 中心光源
+            const glowSize = 35 + Math.sin(progress * Math.PI * 2) * 5;
+            const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowSize);
+            gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+            
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, glowSize, 0, Math.PI * 2);
+            ctx.fill();
 
-        // 模擬隧道透視的擴散距離
-        const dist = Math.pow(starProgress, 2) * maxDist;
+            requestAnimationFrame(animate);
+        }
 
-        // 跟隨整體旋轉
-        const angle = star.angleOffset + progress * BASE_ROTATION;
-
-        const x = centerX + Math.cos(angle) * dist;
-        const y = centerY + Math.sin(angle) * dist;
-
-        // 越靠近邊緣越亮且越大
-        const alpha = Math.sin(starProgress * Math.PI) * 0.8;
-        const size = star.size * (0.5 + starProgress * 2);
-
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-        ctx.beginPath();
-        ctx.arc(x, y, size, 0, Math.PI * 2);
-        ctx.fill();
-    });
-}
-
-function animate() {
-    ctx.clearRect(0, 0, width, height);
-
-    progress += SPEED;
-    if (progress >= 1) progress = 0;
-
-    const maxDist = Math.max(width, height) * 1.5;
-
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    // 1. 繪製星星 (最底層)
-    drawStars();
-
-    // 2. 繪製放射線
-    ctx.lineWidth = SPOKE_LINE_WIDTH;
-    for (let i = 0; i < SPOKE_COUNT; i++) {
-        drawHandDrawnSpoke(i, i * 42.1);
-    }
-
-    // 3. 繪製圓環
-    ctx.lineWidth = RING_LINE_WIDTH;
-    for (let i = 0; i < RING_COUNT; i++) {
-        let ringProgress = (i / RING_COUNT + progress) % 1;
-        const radius = Math.pow(ringProgress, 2.5) * maxDist;
-        const alpha = Math.sin(ringProgress * Math.PI) * 0.5;
-        const ringRotation = progress * BASE_ROTATION;
-
-        drawHandDrawnRing(radius, i * 123.7, alpha, ringRotation);
-    }
-
-    // 4. 中心光源
-    const glowSize = 35 + Math.sin(progress * Math.PI * 2) * 5;
-    const gradient = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, glowSize);
-    gradient.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-    gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
-
-    ctx.fillStyle = gradient;
-    ctx.beginPath();
-    ctx.arc(centerX, centerY, glowSize, 0, Math.PI * 2);
-    ctx.fill();
-
-    requestAnimationFrame(animate);
-}
-
-animate();
+        animate();
