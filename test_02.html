@@ -60,7 +60,7 @@
 
     <div class="content">
         <p style="font-size: 2rem; font-weight: bold; margin: 0;">Starry Tunnel</p>
-        <p style="margin: 0;">Seamless Hand-Drawn Loop with Particles</p>
+        <p style="margin: 0;">Seamless Hand-Drawn Loop with Multi-color Particles</p>
     </div>
 
     <script>
@@ -80,7 +80,10 @@
         // --- 線條與星星設定 (可自訂) ---
         const SPOKE_LINE_WIDTH = 1.0; // 放射線的粗細度
         const RING_LINE_WIDTH = 2.2;  // 圓環線的粗細度
-        const STAR_COUNT = 80;        // 星星數量 (可自訂設定)
+        
+        // 星星顏色自訂設定
+        const STAR_COLORS = ["#ffffff", "#0000ff", "#00ff00", "#ff0000", "pink", "yellow"]; 
+        const STAR_COUNT = 120;       // 星星數量
         const STAR_BASE_SIZE = 2.5;   // 星星基礎大小
 
         let progress = 0;
@@ -92,8 +95,9 @@
                 stars.push({
                     angleOffset: Math.random() * Math.PI * 2, // 隨機放射角度
                     distanceOffset: Math.random(),            // 初始距離偏移
-                    speedMult: 0.5 + Math.random() * 0.5,    // 個別星速差異
-                    size: 0.5 + Math.random() * 1.5           // 個別大小差異
+                    speedMult: 0.5 + Math.random() * 0.5,     // 個別星速差異
+                    size: 0.5 + Math.random() * 1.5,          // 個別大小差異
+                    color: STAR_COLORS[i % STAR_COLORS.length] // 依據 array 長度分配顏色
                 });
             }
         }
@@ -189,12 +193,16 @@
                 
                 // 越靠近邊緣越亮且越大
                 const alpha = Math.sin(starProgress * Math.PI) * 0.8;
-                const size = star.size * (0.5 + starProgress * 2);
+                const size = star.size * (0.5 + starProgress * 2.5);
                 
-                ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+                // 使用自訂顏色並套用透明度
+                ctx.save();
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = star.color;
                 ctx.beginPath();
                 ctx.arc(x, y, size, 0, Math.PI * 2);
                 ctx.fill();
+                ctx.restore();
             });
         }
 
