@@ -78,7 +78,7 @@ body {
 	background: url(images/tab_bg_01.svg) 0 0 no-repeat;
 }
 
-.menu_box.epoch_1 .menu_list li.item_1 {
+.epoch_1 .menu_box .menu_list li.item_1 {
 	width: 40px;
 	height: 200px;
 	position: relative;
@@ -91,7 +91,7 @@ body {
 	background: url(images/tab_bg_02.svg) 0 0 no-repeat;
 }
 
-.menu_box.epoch_2 .menu_list li.item_2 {
+.epoch_2 .menu_box .menu_list li.item_2 {
 	width: 40px;
 	height: 200px;
 	position: relative;
@@ -104,7 +104,7 @@ body {
 	background: url(images/tab_bg_03.svg) 0 0 no-repeat;
 }
 
-.menu_box.epoch_3 .menu_list li.item_3 {
+.epoch_3 .menu_box .menu_list li.item_3 {
 	width: 40px;
 	height: 200px;
 	position: relative;
@@ -117,7 +117,7 @@ body {
 	background: url(images/tab_bg_04.svg) 0 0 no-repeat;
 }
 
-.menu_box.epoch_4 .menu_list li.item_4 {
+.epoch_4 .menu_box .menu_list li.item_4 {
 	width: 40px;
 	height: 200px;
 	position: relative;
@@ -130,7 +130,7 @@ body {
 	background: url(images/tab_bg_05.svg) 0 0 no-repeat;
 }
 
-.menu_box.epoch_5 .menu_list li.item_5 {
+.epoch_5 .menu_box .menu_list li.item_5 {
 	width: 40px;
 	height: 200px;
 	position: relative;
@@ -160,11 +160,11 @@ body {
 
 }
 
-.menu_box.epoch_1 .menu_list li.item_1 a span,
-.menu_box.epoch_2 .menu_list li.item_2 a span,
-.menu_box.epoch_3 .menu_list li.item_3 a span,
-.menu_box.epoch_4 .menu_list li.item_4 a span,
-.menu_box.epoch_5 .menu_list li.item_5 a span {
+.epoch_1 .menu_box .menu_list li.item_1 a span,
+.epoch_2 .menu_box .menu_list li.item_2 a span,
+.epoch_3 .menu_box .menu_list li.item_3 a span,
+.epoch_4 .menu_box .menu_list li.item_4 a span,
+.epoch_5 .menu_box .menu_list li.item_5 a span {
 	display: inline-block;
 }
 
@@ -230,23 +230,23 @@ body {
 	overflow: hidden;
 }
 
-.menu_box.epoch_1 .timeline_box .timeline-ring-out {
+.epoch_1 .menu_box .timeline_box .timeline-ring-out {
 	background: linear-gradient(to right, #ffffff 0%, #fff3c7 100%);
 }
 
-.menu_box.epoch_2 .timeline_box .timeline-ring-out {
+.epoch_2 .menu_box .timeline_box .timeline-ring-out {
 	background: linear-gradient(to right, #ffffff 0%, #3a9eff 100%);
 }
 
-.menu_box.epoch_3 .timeline_box .timeline-ring-out {
+.epoch_3 .menu_box .timeline_box .timeline-ring-out {
 	background: linear-gradient(to right, #ffffff 0%, #ffeb6f 100%);
 }
 
-.menu_box.epoch_4 .timeline_box .timeline-ring-out {
+.epoch_4 .menu_box .timeline_box .timeline-ring-out {
 	background: linear-gradient(to right, #ffffff 0%, #ffb1a1 100%);
 }
 
-.menu_box.epoch_5 .timeline_box .timeline-ring-out {
+.epoch_5 .menu_box .timeline_box .timeline-ring-out {
 	background: linear-gradient(to right, #ffffff 0%, #a1ffe2 100%);
 }
 
@@ -280,7 +280,8 @@ body {
 	position: absolute;
 	top: 0;
 	left: 0;
-	width: 100%;
+	right: 0;
+	margin: 10px;
 	padding: 5px 10px;
 	background: #fff;
 	display: flex;
